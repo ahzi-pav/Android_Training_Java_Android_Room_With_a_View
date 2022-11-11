@@ -6,7 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import java.util.List;
+
 public class WordListAdapter extends ListAdapter<Word, WordViewHolder> {
+
+    private List<Word> mWords;
 
     public WordListAdapter(@NonNull DiffUtil.ItemCallback<Word> diffCallback) {
         super(diffCallback);
@@ -21,6 +25,11 @@ public class WordListAdapter extends ListAdapter<Word, WordViewHolder> {
     public void onBindViewHolder(WordViewHolder holder, int position) {
         Word current = getItem(position);
         holder.bind(current.getWord());
+    }
+
+    public Word getWordAtPosition(int position) {
+        Word current = getItem(position);
+        return current;
     }
 
     static class WordDiff extends DiffUtil.ItemCallback<Word> {

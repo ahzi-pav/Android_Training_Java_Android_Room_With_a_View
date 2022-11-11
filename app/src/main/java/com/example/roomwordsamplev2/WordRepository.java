@@ -1,6 +1,7 @@
 package com.example.roomwordsamplev2;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
@@ -33,5 +34,58 @@ class WordRepository {
         WordRoomDatabase.databaseWriteExecutor.execute(() -> {
             mWordDao.insert(word);
         });
+    }
+
+    private static class insertAsyncTask extends AsyncTask<Word, Void, Void> {
+
+        private WordDao mAsyncTaskDao;
+
+        public insertAsyncTask(WordDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Word... words) {
+            mAsyncTaskDao.insert(words[0]);
+            return null;
+        }
+    }
+
+    public void deleteAll() {
+        new deleteAllWordsAsyncTask(mWordDao).execute();
+    }
+
+    public void deleteWord(Word word) {
+        new deleteWordAsyncTask(mWordDao).execute(word);
+    }
+
+    private static class deleteAllWordsAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private WordDao mAsyncTaskDao;
+
+        deleteAllWordsAsyncTask(WordDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mAsyncTaskDao.deleteAll();
+            return null;
+        }
+    }
+
+    private static class deleteWordAsyncTask extends AsyncTask<Word, Void, Void> {
+
+        private WordDao mAsyncTaskDao;
+
+        deleteWordAsyncTask(WordDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(Word... words) {
+            mAsyncTaskDao.deleteWord(words[0]);
+            return null;
+        }
     }
 }
